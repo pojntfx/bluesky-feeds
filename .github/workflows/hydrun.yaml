@@ -43,6 +43,22 @@ jobs:
         run: hydrun -o ${{ matrix.target.os }} ${{ matrix.target.flags }} "${{ matrix.target.cmd }}"
       - name: Fix permissions for output
         run: sudo chown -R $USER .
+      - name: Set up atmosfeed-client
+        run: |
+          curl -L -o /tmp/atmosfeed-client "https://github.com/pojntfx/atmosfeed/releases/download/release-main/atmosfeed-client.linux-$(uname -m)"
+          sudo install /tmp/atmosfeed-client /usr/local/bin
+      - name: Apply with atmosfeed-client
+        working-directory: ${{ matrix.target.src }}
+        env:
+          BLUESKY_USERNAME: ${{ secrets.BLUESKY_USERNAME }}
+          BLUESKY_PASSWORD: ${{ secrets.BLUESKY_PASSWORD }}
+        run: |
+          for filepath in out/*.scale; do
+            rkey="$(basename "$filepath" -latest.scale)"
+            rkey="${rkey#local-}"
+
+            atmosfeed-client apply --username "${BLUESKY_USERNAME}" --password "${BLUESKY_PASSWORD}" --feed-rkey "${rkey}" --feed-classifier "${filepath}"
+          done
       - name: Upload output
         uses: actions/upload-artifact@v2
         with:
