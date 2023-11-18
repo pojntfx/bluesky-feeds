@@ -50,14 +50,16 @@ jobs:
       - name: Apply with atmosfeed-client
         working-directory: ${{ matrix.target.src }}
         env:
-          BLUESKY_USERNAME: ${{ secrets.BLUESKY_USERNAME }}
-          BLUESKY_PASSWORD: ${{ secrets.BLUESKY_PASSWORD }}
+          ATMOSFEED_PASSWORD: ${{ secrets.ATMOSFEED_PASSWORD }}
+          ATMOSFEED_USERNAME: ${{ secrets.ATMOSFEED_USERNAME }}
+          ATMOSFEED_ATMOSFEED_URL: ${{ secrets.ATMOSFEED_ATMOSFEED_URL }}
+          ATMOSFEED_FEED_GENERATOR_DID: ${{ secrets.ATMOSFEED_FEED_GENERATOR_DID }}
         run: |
           for filepath in out/*.scale; do
             rkey="$(basename "$filepath" -latest.scale)"
             rkey="${rkey#local-}"
 
-            atmosfeed-client apply --username "${BLUESKY_USERNAME}" --password "${BLUESKY_PASSWORD}" --feed-rkey "${rkey}" --feed-classifier "${filepath}"
+            atmosfeed-client apply --feed-rkey "${rkey}" --feed-classifier "${filepath}"
           done
       - name: Upload output
         uses: actions/upload-artifact@v2

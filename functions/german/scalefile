@@ -2,6 +2,7 @@ version  = "v1alpha"
 name     = "german"
 tag      = "latest"
 language = "go"
+stateless = true
 
 signature {
   organization = "local"
