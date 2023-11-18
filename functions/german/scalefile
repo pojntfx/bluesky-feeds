@@ -2,7 +2,6 @@ version  = "v1alpha"
 name     = "german"
 tag      = "latest"
 language = "go"
-stateless = true
 
 signature {
   organization = "local"
@@ -10,6 +9,7 @@ signature {
   tag          = "latest"
 }
 
+stateless = true
 function    = "Scale"
 initialize  = ""
 description = ""
