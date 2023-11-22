@@ -12,16 +12,6 @@ permissions:
 jobs:
   build-linux:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        target:
-          - id: build
-            src: .
-            os: golang:bookworm
-            flags: ""
-            cmd: ./Hydrunfile build
-            dst: out/*
-
     steps:
       - name: Maximize build space
         run: |
@@ -30,24 +20,42 @@ jobs:
           sudo rm -rf /opt/ghc
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-      - name: Set up hydrun
+      - name: Setup Go
+        uses: actions/setup-go@v4
+      - name: Setup TinyGo
+        uses: acifani/setup-tinygo@v2
+        with:
+          tinygo-version: "0.30.0"
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          targets: wasm32-wasi
+      - name: Set up Scale CLI
         run: |
-          curl -L -o /tmp/hydrun "https://github.com/pojntfx/hydrun/releases/latest/download/hydrun.linux-$(uname -m)"
-          sudo install /tmp/hydrun /usr/local/bin
-      - name: Build with hydrun
-        working-directory: ${{ matrix.target.src }}
-        run: hydrun -o ${{ matrix.target.os }} ${{ matrix.target.flags }} "${{ matrix.target.cmd }}"
-      - name: Fix permissions for output
-        run: sudo chown -R $USER .
+          curl -fsSL https://dl.scale.sh?analytics=false | sh
+          source ~/.bashrc
       - name: Set up atmosfeed-client
         run: |
           curl -L -o /tmp/atmosfeed-client "https://github.com/pojntfx/atmosfeed/releases/download/release-main/atmosfeed-client.linux-$(uname -m)"
           sudo install /tmp/atmosfeed-client /usr/local/bin
-      - name: Apply with atmosfeed-client
+      - name: Configure Scale Cargo registry
+        run: |
+          tee ~/.cargo/config.toml <<EOT
+          [registries]
+          scale = { index = "sparse+https://cargo.scale.sh/v1/" }
+          EOT
+      - name: Build classifiers
+        working-directory: ${{ matrix.target.src }}
+        run: |
+          for filepath in classifiers/*; do
+              # TODO: Drop this check once the Go registry is fixed
+              if [ "$filepath" != "classifiers/everything" ] && \
+                 [ "$filepath" != "classifiers/german" ] && \
+                 [ "$filepath" != "classifiers/trending" ]; then
+                  scale function build --release -d "${filepath}"
+              fi
+          done
+      - name: Apply classifiers with atmosfeed-client
         working-directory: ${{ matrix.target.src }}
         env:
           ATMOSFEED_PASSWORD: ${{ secrets.ATMOSFEED_PASSWORD }}

@@ -1,0 +1,19 @@
+[package]
+  edition = "2021"
+  name = "questions"
+  version = "0.1.0"
+
+[lib]
+  path = "lib.rs"
+
+[dependencies]
+  [dependencies.signature]
+    version = "0.1.0"
+    package = "felicitaspojtinger_classifier_latest_guest"
+    registry = "scale"
+
+[profile]
+  [profile.release]
+    codegen-units = 1
+    lto = true
+    opt-level = 3

@@ -1,15 +1,15 @@
 version  = "v1alpha"
-name     = "trending"
+name     = "questions"
 tag      = "latest"
-language = "go"
+language = "rust"
 
 signature {
-  organization = "local"
+  organization = "felicitaspojtinger"
   name         = "classifier"
   tag          = "latest"
 }
 
-stateless = true
-function    = "Scale"
+stateless   = true
+function    = "scale"
 initialize  = ""
 description = ""

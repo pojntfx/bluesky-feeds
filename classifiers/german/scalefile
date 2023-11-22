@@ -1,15 +1,16 @@
 version  = "v1alpha"
-name     = "questions"
+name     = "german"
 tag      = "latest"
-language = "rust"
+language = "go"
 
 signature {
-  organization = "local"
+  organization = "felicitaspojtinger"
   name         = "classifier"
   tag          = "latest"
 }
 
 stateless   = true
-function    = "scale"
+function    = "Scale"
 initialize  = ""
 description = ""
+
