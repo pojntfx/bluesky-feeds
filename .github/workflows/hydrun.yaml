@@ -52,7 +52,10 @@ jobs:
               if [ "$filepath" != "classifiers/everything" ] && \
                  [ "$filepath" != "classifiers/german" ] && \
                  [ "$filepath" != "classifiers/trending" ]; then
-                  scale function build --release -d "${filepath}"
+                  rkey="$(basename "$filepath")"
+
+                  scale --no-telemetry function build --release -d "${filepath}"
+                  scale --no-telemetry function export "local/${rkey}:latest" out
               fi
           done
       - name: Apply classifiers with atmosfeed-client
