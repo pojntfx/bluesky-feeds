@@ -48,15 +48,10 @@ jobs:
         working-directory: ${{ matrix.target.src }}
         run: |
           for filepath in classifiers/*; do
-              # TODO: Drop this check once the Go registry is fixed
-              if [ "$filepath" != "classifiers/everything" ] && \
-                 [ "$filepath" != "classifiers/german" ] && \
-                 [ "$filepath" != "classifiers/trending" ]; then
-                  rkey="$(basename "$filepath")"
+            rkey="$(basename "$filepath")"
 
-                  scale --no-telemetry function build --release -d "${filepath}"
-                  scale --no-telemetry function export "local/${rkey}:latest" out
-              fi
+            scale --no-telemetry function build --release -d "${filepath}"
+            scale --no-telemetry function export "local/${rkey}:latest" out
           done
       - name: Apply classifiers with atmosfeed-client
         working-directory: ${{ matrix.target.src }}
