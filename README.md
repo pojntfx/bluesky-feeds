@@ -2,9 +2,19 @@
 
 Personal Bluesky feeds published using [Atmosfeed](https://github.com/pojntfx/atmosfeed).
 
+[![hydrun CI](https://github.com/pojntfx/bluesky-feeds/actions/workflows/hydrun.yaml/badge.svg)](https://github.com/pojntfx/bluesky-feeds/actions/workflows/hydrun.yaml)
+[![Matrix](https://img.shields.io/matrix/atmosfeed:matrix.org)](https://matrix.to/#/#atmosfeed:matrix.org?via=matrix.org)
+
 ## Overview
 
-🚧 This project is a work-in-progress! Instructions will be added as soon as it is usable. 🚧
+These are my personal Bluesky feeds, which are hosted on [Atmosfeed](https://atmosfeed.p8.lu/) and published to Bluesky automatically with a [GitHub action](./.github/workflows/hydrun.yaml) and [Atmosfeed's web frontend](https://atmosfeed.p8.lu/). To learn more about Atmosfeed, Scale and the role of classifiers, check out the [Atmosfeed GitHub repo](https://github.com/pojntfx/atmosfeed).
+
+The following feeds are available:
+
+- [Everything](https://bsky.app/profile/did:plc:jr5pspcicy5er44le6gdklnr/feed/everything): A test feed with everything (written in Go, see: [classifiers/everything/main.go](./classifiers/everything/main.go))
+- [Trending](https://bsky.app/profile/did:plc:jr5pspcicy5er44le6gdklnr/feed/trending): Currently trending skeets (written in Go, see: [classifiers/trending/main.go](./classifiers/trending/main.go))
+- [German](https://bsky.app/profile/did:plc:jr5pspcicy5er44le6gdklnr/feed/german): All German posts on Bluesky (written in Go, see: [classifiers/german/main.go](./classifiers/german/main.go))
+- [Questions](https://bsky.app/profile/did:plc:jr5pspcicy5er44le6gdklnr/feed/questions): All Questions on Bluesky (written in Rust, see: [classifiers/questions/lib.rs](./classifiers/questions/lib.rs))
 
 ## Contributing
 
